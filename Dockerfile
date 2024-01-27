@@ -13,7 +13,7 @@ RUN apt-get update                        \
         build-essential                   \
         htop net-tools nano gcc g++ gdb   \
         netcat curl wget zip unzip        \
-        cron sudo gosu dos2unix  jq       \
+        cron gosu dos2unix  jq       \
         tzdata python3 python3-pip        \
     && rm -rf /var/lib/apt/lists/*        \
     && gosu nobody true                   \
@@ -38,10 +38,6 @@ ARG GITHUB_REPOSITORY="not-set"
 ENV PUID=1000
 ENV PGID=1000
 
-RUN usermod -u ${PUID} steam                                \
-    && groupmod -g ${PGID} steam                            \
-    && echo "steam ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-
 USER steam
 
 WORKDIR /home/steam
@@ -61,13 +57,13 @@ RUN pip3 install pipenv \
 
 COPY --chown=${PUID}:${PGID} ./scripts /home/steam/scripts
 
-
 EXPOSE 8211/udp
 EXPOSE 27015/udp
 
 RUN echo "source /home/steam/scripts/utils.sh" >> /home/steam/.bashrc
 
+USER root
 #HEALTHCHECK --interval=1m --timeout=3s \
 #    CMD pidof valheim_server.x86_64 || exit 1
 
-ENTRYPOINT ["/bin/bash","/home/steam/scripts/entrypoint.sh"]
+ENTRYPOINT ["/home/steam/scripts/entrypoint.sh"]
