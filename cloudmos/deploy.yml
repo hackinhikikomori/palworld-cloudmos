@@ -11,7 +11,7 @@ services:
           - global: true
       - port: 27015
         as: 27015
-        proto: tcp
+        proto: udp
         to:
           - global: true
     env:
