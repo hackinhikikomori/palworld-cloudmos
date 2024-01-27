@@ -1,0 +1,52 @@
+---
+version: "2.0"
+services:
+  palworld:
+    image: mbround18/palworld-docker:v1.0.0
+    expose:
+      - port: 8211
+        as: 8211
+        proto: udp
+        to:
+          - global: true
+      - port: 27015
+        as: 27015
+        proto: tcp
+        to:
+          - global: true
+    env:
+      - SERVER_NAME=changeme
+      - SERVER_PASSWORD=changeme
+      - ADMIN_PASSWORD=changeme
+      - PRESET=NORMAL
+    params:
+      storage:
+        data:
+          mount: /home/steam/palworld
+          readOnly: false
+profiles:
+  compute:
+    palworld:
+      resources:
+        cpu:
+          units: 4
+        memory:
+          size: 32Gi
+        storage:
+          - size: 20Gi
+          - name: data
+            size: 50Gi
+            attributes:
+              persistent: true
+              class: beta3
+  placement:
+    dcloud:
+      pricing:
+        palworld:
+          denom: uakt
+          amount: 1000
+deployment:
+  palworld:
+    dcloud:
+      profile: palworld
+      count: 1
