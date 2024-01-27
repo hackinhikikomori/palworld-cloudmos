@@ -2,7 +2,7 @@
 version: "2.0"
 services:
   palworld:
-    image: mbround18/palworld-docker:v1.0.0
+    image: changeme:0.0.2
     expose:
       - port: 8211
         as: 8211
